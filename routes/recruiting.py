@@ -39,9 +39,7 @@ def get_disqualified_list():
                 params.append(season_id)
             cur.execute(query, params)
             rows = cur.fetchall()
-            if not rows:
-                return jsonify({"message": "No disqualified applicants found"}), 200
-            return jsonify(rows), 200
+            return jsonify(rows if rows else []), 200
     except Exception as e:
         logger.error(f"Error fetching disqualified list: {e}")
         return jsonify({"error": "Internal server error"}), 500

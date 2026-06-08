@@ -119,9 +119,6 @@ def stats_season_pass_rate():
             )
             seasons = cur.fetchall()
 
-        if not seasons:
-            return jsonify({"message": "No seasons found"}), 200
-
         season_stats = []
 
         for season in seasons:
@@ -258,9 +255,6 @@ def stats_papers_with_citations(season_id):
                 (season_id,),
             )
             papers = cur.fetchall()
-
-        if not papers:
-            return jsonify({"message": "No papers found for this season"}), 200
 
         paper_stats = []
         for paper in papers:

@@ -191,7 +191,7 @@ def get_paper_assignments(season_id):
             )
             rows = cur.fetchall()
             if not rows:
-                return jsonify({"message": "No paper assignments found for this season"}), 200
+                return jsonify([]), 200
             return jsonify(rows), 200
     except Exception as e:
         logger.error(f"Error fetching paper assignments for season {season_id}: {e}")
