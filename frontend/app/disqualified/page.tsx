@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { getDisqualifiedList, DisqualifiedApplicant } from '@/lib/api'
 
-const SEASON_ID = 12
+const SEASON_ID = 1
 
 export default function DisqualifiedPage() {
   const [list, setList] = useState<DisqualifiedApplicant[]>([])

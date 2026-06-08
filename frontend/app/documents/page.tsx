@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { listDocuments, updateDocument, Document } from '@/lib/api'
 
-const SEASON_ID = 12
+const SEASON_ID = 1
 const ALLOWED_STATUSES = ['pending', 'verified', 'missing', 'incomplete']
 
 const STATUS_LABELS: Record<string, string> = {

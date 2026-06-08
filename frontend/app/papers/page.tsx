@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { getPaperAssignments, assignPapers, reassignPaper, PaperAssignment } from '@/lib/api'
 import Badge from '@/components/ui/Badge'
 
-const SEASON_ID = 12
+const SEASON_ID = 1
 
 export default function PapersPage() {
   const [assignments, setAssignments] = useState<PaperAssignment[]>([])

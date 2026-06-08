@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { closeSeason, cleanupSeason, restoreSeason } from '@/lib/api'
 
-const SEASON_ID = 12
+const SEASON_ID = 1
 
 type ActionResult = { message: string; [key: string]: unknown }
 

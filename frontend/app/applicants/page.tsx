@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { listApplicants, reassignPaper, Applicant } from '@/lib/api'
 
-const SEASON_ID = 12
+const SEASON_ID = 1
 
 const STATUS_COLORS: Record<string, string> = {
   '합격':   'badge badge-pass',

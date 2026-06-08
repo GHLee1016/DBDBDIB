@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { getSeasonPassRate, getPapersWithCitations, SeasonStat, PaperStat } from '@/lib/api'
 import Badge from '@/components/ui/Badge'
 
-const SEASON_ID = 12
+const SEASON_ID = 1
 
 export default function StatsPage() {
   const [seasons, setSeasons] = useState<SeasonStat[]>([])
@@ -91,7 +91,7 @@ export default function StatsPage() {
           </div>
           {!papersLoaded && (
             <button className="btn btn-sm" onClick={loadPapers} disabled={loadingPapers}>
-              {loadingPapers ? '조회 중… (시간 소요)' : 'Season 12 조회'}
+              {loadingPapers ? '조회 중… (시간 소요)' : 'Season 1 조회'}
             </button>
           )}
         </div>
@@ -105,7 +105,7 @@ export default function StatsPage() {
 
         {!loadingPapers && !papersLoaded && (
           <p className="text-sm text-gray-400 py-4 text-center">
-            &quot;Season 12 조회&quot; 버튼을 눌러 인용수를 가져오세요.
+            &quot;Season 1 조회&quot; 버튼을 눌러 인용수를 가져오세요.
           </p>
         )}
 
