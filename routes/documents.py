@@ -12,6 +12,46 @@ logger = logging.getLogger(__name__)
 bp = Blueprint("documents", __name__)
 
 
+@bp.route("/admin/documents", methods=["GET"])
+def list_documents():
+    """시즌별 전체 서류 목록을 반환합니다."""
+    season_id = request.args.get("season_id", type=int)
+    conn = None
+    try:
+        conn = get_conn()
+        with conn.cursor() as cur:
+            query = """
+                SELECT
+                    d.doc_id,
+                    d.doc_type,
+                    d.status,
+                    d.is_disqualified,
+                    d.issue_note,
+                    a.applicant_id,
+                    a.name,
+                    a.major,
+                    a.final_status,
+                    a.season_id
+                FROM documents d
+                JOIN applicants a ON d.applicant_id = a.applicant_id
+                WHERE a.deleted_at IS NULL
+            """
+            params = []
+            if season_id:
+                query += " AND a.season_id = %s"
+                params.append(season_id)
+            query += " ORDER BY a.name, d.doc_type"
+            cur.execute(query, params)
+            rows = cur.fetchall()
+            return jsonify(rows if rows else []), 200
+    except Exception as e:
+        logger.error(f"Error listing documents: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+    finally:
+        if conn:
+            conn.close()
+
+
 @bp.route("/admin/documents/<int:doc_id>", methods=["PATCH"])
 def update_document_status(doc_id):
     """

@@ -16,6 +16,9 @@ async function req<T>(path: string, options?: RequestInit): Promise<T> {
 export const dbCheck = () => req('/common/db-check')
 
 // ── 지원자 ────────────────────────────────────────────
+export const listApplicants = (season_id?: number) =>
+  req<Applicant[]>(`/admin/applicants${season_id ? `?season_id=${season_id}` : ''}`)
+
 export const getApplicantStats = (id: number) =>
   req<{ name: string; avg_score: number; total_evals: number }>(
     `/admin/applicants/${id}/stats`
@@ -28,6 +31,9 @@ export const reassignPaper = (id: number, paper_id?: number) =>
   })
 
 // ── 서류 ──────────────────────────────────────────────
+export const listDocuments = (season_id?: number) =>
+  req<Document[]>(`/admin/documents${season_id ? `?season_id=${season_id}` : ''}`)
+
 export const updateDocument = (
   doc_id: number,
   data: { status: string; is_disqualified: boolean; issue_note?: string }
@@ -73,6 +79,32 @@ export const getPapersWithCitations = (season_id: number) =>
   req<PaperCitationResponse>(`/admin/stats/papers/${season_id}`)
 
 // ── 타입 ──────────────────────────────────────────────
+export interface Applicant {
+  applicant_id: number
+  name: string
+  major: string
+  email: string
+  final_status: string
+  season_id: number
+  avg_score: number | null
+  total_evals: number
+  paper_title: string | null
+  paper_difficulty: string | null
+}
+
+export interface Document {
+  doc_id: number
+  doc_type: string
+  status: string
+  is_disqualified: boolean
+  issue_note: string | null
+  applicant_id: number
+  name: string
+  major: string
+  final_status: string
+  season_id: number
+}
+
 export interface PaperAssignment {
   applicant_id: number
   name: string

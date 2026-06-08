@@ -1,13 +1,55 @@
 # =========================
 # routes/applicants.py
-# 지원자 평균 점수 조회
+# 지원자 목록 조회 / 평균 점수 조회 / 논문 재배정
 # =========================
 import logging
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from db import get_conn
 
 logger = logging.getLogger(__name__)
 bp = Blueprint("applicants", __name__)
+
+
+@bp.route("/admin/applicants", methods=["GET"])
+def list_applicants():
+    """시즌별 전체 지원자 목록을 반환합니다."""
+    season_id = request.args.get("season_id", type=int)
+    conn = None
+    try:
+        conn = get_conn()
+        with conn.cursor() as cur:
+            query = """
+                SELECT
+                    a.applicant_id,
+                    a.name,
+                    a.major,
+                    a.email,
+                    a.final_status,
+                    a.season_id,
+                    ROUND(AVG(e.score), 2) AS avg_score,
+                    COUNT(e.eval_id)       AS total_evals,
+                    p.title                AS paper_title,
+                    p.difficulty           AS paper_difficulty
+                FROM applicants a
+                LEFT JOIN evaluations e        ON a.applicant_id = e.applicant_id
+                LEFT JOIN paper_assignments pa ON a.applicant_id = pa.applicant_id
+                LEFT JOIN papers p             ON pa.paper_id = p.paper_id
+                WHERE a.deleted_at IS NULL
+            """
+            params = []
+            if season_id:
+                query += " AND a.season_id = %s"
+                params.append(season_id)
+            query += " GROUP BY a.applicant_id, p.title, p.difficulty ORDER BY a.name"
+            cur.execute(query, params)
+            rows = cur.fetchall()
+            return jsonify(rows if rows else []), 200
+    except Exception as e:
+        logger.error(f"Error listing applicants: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+    finally:
+        if conn:
+            conn.close()
 
 
 @bp.route("/admin/applicants/<int:app_id>/stats", methods=["GET"])
